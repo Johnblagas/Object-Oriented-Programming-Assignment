@@ -1,13 +1,21 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
+import javax.swing.JTextArea;
 
 public class User {
 	private String name;
 	private String email;
 	private ArrayList<User> friends = new ArrayList<User>();
 	private ArrayList<Group> groups = new ArrayList<Group>();
+	private ArrayList<Post> posts = new ArrayList<Post>();
+	private Post lastpost;
 	
 	
 	public User(String aName, String anEmail) {
@@ -82,6 +90,10 @@ public class User {
 	}
 	
 	
+	public String GetEmail() {
+		return email;
+	}
+	
 	
 	public void CommonFriends(User anUser) {
 		int count = 0;
@@ -137,25 +149,39 @@ public class User {
 	}
 	
 	
-	public void CoronaResearch() { //елжамифеи та пихама йяоуслата поу евоум еяхеи се епажг ле том вягстг "епибебаиылемо йяоусла"
-		ArrayList<User> infected = friends;
+	public JTextArea CoronaResearch() { //елжамифеи та пихама йяоуслата поу евоум еяхеи се епажг ле том вягстг "епибебаиылемо йяоусла"
+		ArrayList<User> infected = new ArrayList<>();
+		infected.addAll(friends);
 		
-		System.out.println("**************************************");
-		System.out.println(name + " has been infected. The following users have to be tested");
-		System.out.println("**************************************");
+		JTextArea text = new JTextArea("**************************************\n"
+										+ name + " has been infected. The following users have to be tested\n"
+										+ "**************************************\n");
+
 			
-		for(User i : friends)
+		for(User i : infected)
 		{
-			System.out.println(i.GetName());
+			text.append(i.GetName() + "\n");
+		}
+		
+		for(int i=0; i<this.friends.size(); i++)
+		{
+			User myFriend = friends.get(i); 
 			
-			for(User j : i.friends)
+			for(int j=0; j<myFriend.friends.size(); j++)
 			{
-				if(!j.IsFriend(this) && !AlreadyInfected(infected, j)) System.out.println(j.GetName());
+				User friendsFriend = myFriend.friends.get(j);
+				
+				if(!friendsFriend.IsFriend(this) && !AlreadyInfected(infected, friendsFriend) && !friendsFriend.equals(this)) 
+				{
+					text.append(friendsFriend.GetName() + "\n");
+					infected.add(friendsFriend);
+				}
 			}
 		}
 		
-		System.out.println("--------------------------------------");
 		
+		text.append("--------------------------------------");
+		return text;
 	}
 	
 	
@@ -163,9 +189,69 @@ public class User {
 		
 		for(User i : infected)
 		{
-			if(i == anUser) return false;
+			if(i.equals(anUser)) return true;
 		}
 		
-		return true;
+		return false;
+	}
+	
+	
+	public void AddPost(String text) {
+		Post p = new Post(text, name);
+		posts.add(p);
+		lastpost = p;
+		}
+	
+	
+	public JTextArea PrintPosts() { //епистяежеи йеилемо JTEXT ока та пост тым жикым йаи тоу идиоу тоу вягстг ле вяомийг сеияа
+		Set<Post> allPosts = new TreeSet<>(); //бафеи ока та пост се TREESET циа ма танимолгхоум
+		JTextArea recentPosts = new JTextArea();
+		
+		for(Post p : posts)
+		{
+			allPosts.add(p);
+		}
+		
+		for(User u : friends) 
+		{
+			for(Post p : u.posts)
+			{
+				allPosts.add(p);
+			}			
+		}
+		
+		for(Post i : allPosts)
+		{
+			recentPosts.append(i.GetUsername() + ", " + i.GetDate() + ", " + i.GetPost() + "\n");
+		}
+		
+		return recentPosts;
+	}
+	
+	
+	public String GetLastPost() {
+		return (lastpost.GetUsername() + ", " + lastpost.GetDate() + ", " + lastpost.GetPost() + "\n");
+	}
+	
+	
+	public JList SuggestedFriends() { // епистяежеи лиа киста ле тоус SUGGESTED FRIENDS
+		ArrayList<User> alreadySuggested = new ArrayList<>();
+		DefaultListModel<String> model = new DefaultListModel<String>();
+		JList<String> suggestions = new JList<String>(model);
+		
+		
+		for(User i : friends)
+		{
+			for(User j : i.friends)
+			{
+				if(!this.IsFriend(j) && !this.equals(j) && !alreadySuggested.contains(j))
+				{
+					model.addElement(j.GetName());
+					alreadySuggested.add(j);
+				}
+			}
+		}
+		
+		return suggestions;
 	}
 }
