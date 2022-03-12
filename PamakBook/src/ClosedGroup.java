@@ -1,3 +1,4 @@
+import javax.swing.JOptionPane;
 
 public class ClosedGroup extends Group {
 	
@@ -16,7 +17,8 @@ public class ClosedGroup extends Group {
 			super.BecomeMember(anUser);
 		
 		else
-			System.out.println("FAILED: " + anUser.GetName() + " cannot be enrolled in group" + name);
+			//System.out.println("FAILED: " + anUser.GetName() + " cannot be enrolled in group" + name);
+			JOptionPane.showMessageDialog(null, "FAILED: " + anUser.GetName() + " cannot be enrolled in group" + name);
 	}
 	
 	

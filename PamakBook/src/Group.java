@@ -1,6 +1,9 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Group {
+import javax.swing.JOptionPane;
+
+public class Group implements Serializable{
 	protected String name;
 	protected String description;
 	protected ArrayList<User> groupUsers = new ArrayList<User>();
@@ -34,8 +37,11 @@ public class Group {
 		{
 			groupUsers.add(anUser);
 			anUser.EnrollInGroup(this);
-			System.out.println(anUser.GetName() + " has been successfully enrolled in group" + name);
+			//System.out.println(anUser.GetName() + " has been successfully enrolled in group" + name);
+			JOptionPane.showMessageDialog(null, anUser.GetName() + " has been successfully enrolled in group" + name);
 		}
+		else
+			JOptionPane.showMessageDialog(null, anUser.GetName() + " has been already enrolled in group" + name);
 	}
 	
 	

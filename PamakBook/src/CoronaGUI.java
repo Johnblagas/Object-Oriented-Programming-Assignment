@@ -12,7 +12,7 @@ public class CoronaGUI extends JFrame{
 	private JTextArea text;
 	private JButton backToLoginButton;
 	
-	public CoronaGUI(User user, LoginGUI PrevGUI) {
+	public CoronaGUI(User user, MainGUI PrevGUI) {
 		
 		panel = new JPanel();
 		text = new JTextArea();

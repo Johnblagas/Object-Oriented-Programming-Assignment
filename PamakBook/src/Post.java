@@ -1,8 +1,9 @@
+import java.io.Serializable;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat; 
 
-public class Post implements Comparable<Post>{
+public class Post implements Comparable<Post>, Serializable{
 	private Date date;
 	private String post;
 	private String username;

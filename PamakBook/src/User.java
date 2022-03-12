@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Set;
@@ -7,9 +8,10 @@ import java.util.regex.Pattern;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
-public class User {
+public class User implements Serializable{
 	private String name;
 	private String email;
 	private ArrayList<User> friends = new ArrayList<User>();
@@ -19,38 +21,10 @@ public class User {
 	
 	
 	public User(String aName, String anEmail) {
-		
-		Scanner scan = new Scanner(System.in);
-		
-		if(CheckMail(anEmail))
-		{
 			name = aName;
 			email = anEmail;
-		}
-		else
-		{
-			System.out.println("User " + aName + " has not been created. Email format is not acceptable.");
-			do {
-				System.out.println("Please give an email in correct form: ");
-				email = scan.nextLine();
-			}while(!CheckMail(email));
-		}
-			
-		
-		
 	}
 	
-	
-	private boolean CheckMail(String anEmail) {
-		Pattern pattern = Pattern.compile("ics[0-9]{3,5}@uom.edu.gr|iis[0-9]{3,5}@uom.edu.gr|dai[0-9]{3,5}@uom.edu.gr");
-		Matcher matcher = pattern.matcher(anEmail);
-		
-		if(matcher.matches())
-			return true;
-		else
-			return false;
-		
-	}
 	
 	
 	public void BecomeFriend(User anUser) {
@@ -58,10 +32,12 @@ public class User {
 		if(!IsFriend(anUser)  && !anUser.equals(this)) {
 			friends.add(anUser);
 			anUser.friends.add(this);
-			System.out.println(name +  " and " + anUser.GetName() + " are now friends!");
+			JOptionPane.showMessageDialog(null, name +  " and " + anUser.GetName() + " are now friends!");
 		}
-		else 
-			System.out.println(name + " and " + anUser.GetName() + " are already friends.");
+		else if(IsFriend(anUser)  && !anUser.equals(this))
+		{
+			JOptionPane.showMessageDialog(null, name + " and " + anUser.GetName() + " are already friends.");
+		}
 		
 	}
 	
